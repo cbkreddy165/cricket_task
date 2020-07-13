@@ -24,47 +24,22 @@
 		<![endif]-->
 	
 		<style>
-			.teamsimg{
-				width:100px !important;
-				height:100px !important;
+			.intro-header2 {
+				padding-top: 50px;
+				padding-bottom: 50px;
+				
+
 			}
-			.table tr td {
-				vertical-align: middle !important;
-				font-size:18px;
+			.intro-message2{
+				margin: 0 auto;
+				width: 400px;
+				min-height: 400px;
 			}
-			.viewmore{
-				    background: #0a7fc3;
-					padding: 10px;
-					border-radius: 5px;
-					color: #fff;
+			.intro-message2 h1{
+				text-align:center;
 			}
-			.viewmore:hover{
-				color:#fff;
-				text-decoration:none;
-			}
-			.viewmore2{
-				    background: #a08a1b;
-					padding: 10px;
-					border-radius: 5px;
-					color: #fff;
-			}
-			.viewmore2:hover{
-				color:#fff;
-				text-decoration:none;
-			}
-			.viewmore3{
-				    background: #a08a1b;
-					padding: 10px;
-					border-radius: 5px;
-					color: #fff;
-			}
-			.viewmore3:hover{
-				color:#fff;
-				text-decoration:none;
-			}
-			.addteam{
-				display: block;
-				margin-bottom: 20px;
+			.btnBlue{
+				    background: #4e6ab9;
 			}
 		</style>
 	
@@ -77,87 +52,75 @@
 	
 	
     <a name="about"></a>
-    <div class="intro-header">
+    <div class="intro-header2">
         <div class="container">
 
             <div class="row">
-                <div class="col-lg-8">
+                <div class="">
                     <div class="intro-message2">
-                        <h1>IPL Teams List</h1>
-						<span class="text-right addteam"><a href="{{url('/')}}/addTeam" class="viewmore">Add Team</a></span>
+                        <h1>Add Team</h1>
 						
-						@if (count($teamsList) > 0 )
-							<table class="table table-bordered">
-							
-								@php
-									$i = 1
-								@endphp
-								@foreach ($teamsList as $team)
-								  <tr>
-									<td>{{ $i }}</td>
-									<td><img src="{{url('/')}}/public/img/{{$team->logoUri }}" alt="" class="teamsimg" /></td>
-									<td>{{$team->name }}</td>
-									<td><a href="{{url('/')}}/teamInfo/{{$team->id }}" class="viewmore">View Team Members</a></td>
-									<td>
-										<a href="{{url('/')}}/editTeam/{{$team->id }}" class="viewmore2">EDIT</a> 
-										<a href="#" data-id="{{$team->id }}" onclick="deleteTeam({{$team->id }})" class="viewmore3">DELETE</a>
-									</td>
-								  </tr>
-								  @php
-									$i++
-								@endphp
-								@endforeach  
+						@if ($message = Session::get('success'))
+
+							<div class="alert alert-success alert-block">
+
+								<button type="button" class="close" data-dismiss="alert">×</button>
+
+									<strong>{{ $message }}</strong>
+
+							</div>
+
 						
-							</table>
-						@else
-							<table class="table table-bordered">	
-							  <tr>
-								<td colspan="5">Not Found any Teams</td>
-							  </tr>
-							</table>
+
 						@endif
 						
-						{{ $teamsList->links() }}
+						
+						<!-- Edit Info -->
+						
+						@if ($editID == TRUE)
+							
+							<form action="{{url('/')}}/saveTeamData" enctype="multipart/form-data" method="post">
+							 {{ csrf_field() }}
+							  <div class="form-group">
+								<label for="name">Team Name:</label>
+								<input type="text" class="form-control" id="teamName" name="teamName" value="{{$teamsList->name}}">
+							  </div>
+							  
+							  <div class=""><img src="{{url('/')}}/public/img/{{$teamsList->logoUri}}"></div>
+							  
+							  <div class="form-group">
+								<label for="file">Team Logo:</label>
+								<input type="file" class="form-control" id="teamLogo" name="teamLogo" value="">
+							  </div>
+							 <input type="hidden" class="form-control" id="id" name="editid" value="{{$editID}}">
+							  <button type="submit" class="btn btn-default btnBlue">Update</button>
+							</form>
+							
+						@else
+							
+							<form action="{{url('/')}}/saveTeamData" enctype="multipart/form-data" method="post">
+								 {{ csrf_field() }}
+							  <div class="form-group">
+								<label for="name">Team Name:</label>
+								<input type="text" class="form-control" id="teamName" name="teamName">
+							  </div>
+							  <div class="form-group">
+								<label for="file">Team Logo:</label>
+								<input type="file" class="form-control" id="teamLogo" name="teamLogo">
+							  </div>
+							 
+							  <button type="submit" class="btn btn-default btnBlue">Submit</button>
+							</form>
+							
+							
+						@endif
+						
+						
+						
                     </div>
                 </div>
 				
-				<div class="col-md-4">
-					<div class="intro-message2">
-                        <h1>Points</h1>
-                         <table class="table table-bordered">
-						 
-							<tr>
-								<th>Teams</th> 
-								<th>M</th>
-								<th>W</th>
-								<th>L</th>
-								<th>Pts</th>
-							</tr>
-							@if (count($points) > 0 )
-								@foreach ($points as $point)
-								<tr>
-									
-									<td><img src="{{url('/')}}/public/img/{{$point->logoUri}}" alt="" class="teamsimg2" width="30" height="30" />{{ $point->name }}</td>
-									<td>{{ $point->matches }}</td>
-									<td>{{ $point->winner }}</td>
-									<td>{{ $point->lost }}</td>
-									<td>{{ $point->points }}</td>
-								 </tr>
-								 @endforeach
-							 @else
-									
-							  <tr>
-								<td colspan="5">No Points</td>
-							  </tr>
-							@endif
-							 
-							 
-							
-							
-						  </table>
-                    </div>
 				
-				</div>
 				
             </div>
 

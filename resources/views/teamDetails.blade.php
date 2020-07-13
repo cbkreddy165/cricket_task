@@ -63,6 +63,30 @@
 				float: left;
 				font-size: 22px;
 			}
+			.viewmore2{
+				    background: #a08a1b;
+					padding: 10px;
+					border-radius: 5px;
+					color: #fff;
+			}
+			.viewmore2:hover{
+				color:#fff;
+				text-decoration:none;
+			}
+			.viewmore3{
+				    background: #a08a1b;
+					padding: 10px;
+					border-radius: 5px;
+					color: #fff;
+			}
+			.viewmore3:hover{
+				color:#fff;
+				text-decoration:none;
+			}
+			.addteam{
+				display: block;
+				margin-bottom: 20px;
+			}
 		</style>
 	
     </head>
@@ -86,8 +110,10 @@
                         <h1>{{ $teamsList->name}}</h1>
 					</div>
 					
+					<span class="text-right addteam"><a href="{{url('/')}}/addTeamPlayer" class="viewmore">Add Team Player</a></span>
+					@if (count($teamsDetails) > 0 ) 
 					<table class="table table-bordered">
-						@if (count($teamsDetails) > 0 )
+						
 							@php
 								$i = 1
 							@endphp
@@ -100,6 +126,11 @@
 								<td>{{$team->jersey_number }}</td>
 								<td>{{$team->country }}</td>
 								<td><a id="myModal{{$team->id }}" class="myModal viewmore" data-id="{{$team->id }}"  href="javascript:void(0)" >Player History</a></td>
+								<td>
+									<a href="{{url('/')}}/editTeamPlayer/{{$team->id }}" class="viewmore2">EDIT</a> 
+									<a href="#" data-id="{{$team->id }}" onclick="deleteTeamPlayer({{$team->id }})" class="viewmore3">DELETE</a>
+								</td>
+							  
 							  </tr>
 							  
 							@php
@@ -129,13 +160,19 @@
 							
 							
 							@endforeach  
-						@else
-								
-						  <tr>
-							<td colspan="4">Not Found </td>
-						  </tr>
-						@endif
+						
 					</table>
+					@else
+								
+						 <table class="table table-bordered">	
+						  <tr>
+							<td colspan="5">Not Found any Teams</td>
+						  </tr>
+						</table>
+					@endif
+					
+					{{ $teamsDetails->links() }}
+					
                 </div>
             </div>
 
@@ -158,5 +195,49 @@
 			});
 		});
 	</script>
+	
+<script type="text/javascript">
+    function deleteTeamPlayer(id)
+    {
+        if(id !=""){
+				
+			var csrf_token= "<?php echo csrf_token();?>";	
+             var r = confirm("Are you sure you want to delete Team Player");
+             if(r ==true){
+                 $.ajax({
+                    url: "<?php echo url('/');?>/deleteTeamPlayer",
+                    type: "post",
+                    data: {id : id,'_token':csrf_token,'action':'deleteTeamPlayer'},
+                    success: function (response) {
+                       if(response == 1){
+                           alert("deleted Successfully");
+                           
+                           window.location.reload();
+                       }else if(response == 3){
+                           alert("deleted record id missing");
+                           
+                           return false;
+                       }else{
+                            alert("deleted Failed something went wrong in query");
+                            return false;
+                       }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                       console.log(textStatus, errorThrown);
+                    }
+                });
+                 //window.location.href = 'delete.php?id='+delId;
+             }else{
+                 
+             }
+         }else{
+			 
+			 alert("deleted record id missing");
+			  return false;
+		 }
+    }
+    
+   
+</script>
     </body>
 </html>
