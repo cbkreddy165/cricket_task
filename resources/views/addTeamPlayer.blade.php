@@ -250,48 +250,6 @@
 	 <!-- Footer -->
 	  @include('footer')
     
-<script type="text/javascript">
-    function deleteTeam(id)
-    {
-        if(id !=""){
-				
-			var csrf_token= "<?php echo csrf_token();?>";	
-             var r = confirm("Are you sure you want to delete Team");
-             if(r ==true){
-                 $.ajax({
-                    url: "<?php echo url('/');?>/deleteTeam",
-                    type: "post",
-                    data: {id : id,'_token':csrf_token,'action':'deleteTeam'},
-                    success: function (response) {
-                       if(response == 1){
-                           alert("deleted Successfully");
-                           
-                           window.location.reload();
-                       }else if(response == 3){
-                           alert("deleted record id missing");
-                           
-                           return false;
-                       }else{
-                            alert("deleted Failed something went wrong in query");
-                            return false;
-                       }
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                       console.log(textStatus, errorThrown);
-                    }
-                });
-                 //window.location.href = 'delete.php?id='+delId;
-             }else{
-                 
-             }
-         }else{
-			 
-			 alert("deleted record id missing");
-			  return false;
-		 }
-    }
-    
-   
-</script>
+
     </body>
 </html>
